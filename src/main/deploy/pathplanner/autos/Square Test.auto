@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Vision Off"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Square 1 - Forward"

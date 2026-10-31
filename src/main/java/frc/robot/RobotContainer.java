@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -40,10 +42,18 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    /* Limelight AprilTag corrections to the drivetrain's position estimate */
+    private final Vision vision = new Vision(drivetrain);
+
     /* Auto picker on the dashboard; lists every auto in src/main/deploy/pathplanner/autos */
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
+        // Named commands let PathPlanner autos call our code. They must be registered
+        // BEFORE the autos are built, or PathPlanner won't find them.
+        NamedCommands.registerCommand("Vision On", vision.setEnabledCommand(true));
+        NamedCommands.registerCommand("Vision Off", vision.setEnabledCommand(false));
+
         // Default selection is the Square Test; pick others from the "Auto Mode" chooser
         autoChooser = AutoBuilder.buildAutoChooser("Square Test");
         SmartDashboard.putData("Auto Mode", autoChooser);
@@ -87,6 +97,9 @@ public class RobotContainer {
 
         // Reset the field-centric heading on left bumper press.
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+        // An auto may have turned vision off; always drive teleop with vision on
+        RobotModeTriggers.teleop().onTrue(vision.setEnabledCommand(true));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
