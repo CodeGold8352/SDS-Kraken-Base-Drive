@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
+import frc.lib.vision.MultiLimelightVision;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -42,8 +42,14 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    /* Limelight AprilTag corrections to the drivetrain's position estimate */
-    private final Vision vision = new Vision(drivetrain);
+    /* Limelight AprilTag corrections to the drivetrain's position estimate (cameras set in VisionConstants) */
+    private final MultiLimelightVision vision = new MultiLimelightVision(
+        VisionConstants.kCameras,
+        VisionConstants.kAllTagIds,
+        () -> drivetrain.getState().Pose,
+        () -> drivetrain.getState().Speeds.omegaRadiansPerSecond,
+        drivetrain::addVisionMeasurement // converts the Limelight's timestamp to CTRE's clock
+    );
 
     /* Auto picker on the dashboard; lists every auto in src/main/deploy/pathplanner/autos */
     private final SendableChooser<Command> autoChooser;

@@ -12,6 +12,8 @@ Repo: https://github.com/CodeGold8352/SDS-Kraken-Base-Drive (public fork of carr
 - `generated/TunerConstants.java` — Tuner X output. Don't hand-edit module offsets/IDs; regenerate from Tuner X instead.
 - `subsystems/CommandSwerveDrivetrain.java` — drivetrain + `configureAutoBuilder()` (PathPlanner, ApplyRobotSpeeds with wheel force feedforwards; path PID translation 10, rotation 7; flips paths on red)
 - `RobotContainer.java` — Xbox driver bindings, "Auto Mode" SendableChooser built by `AutoBuilder.buildAutoChooser("Square Test")`
+- `frc/lib/vision/` — reusable multi-Limelight MegaTag2 library (`MultiLimelightVision`, `CameraConfig`, `VisionProfile` LOCALIZATION/ALIGNMENT). Game- and drivetrain-independent; don't put season-specific values here.
+- `VisionConstants.java` — this season's camera list (mount values still TODO measure) and tag IDs.
 - `src/main/deploy/pathplanner/` — PathPlanner GUI files. `settings.json` = robot config (30 lb, 26x25 in bumpers, MOI estimated 0.95 kg·m²). Edit paths/autos in the PathPlanner app, not by hand.
 
 ## Autos
