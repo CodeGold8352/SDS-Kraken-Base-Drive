@@ -11,7 +11,9 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,6 +49,16 @@ public class RobotContainer {
 
     /* Auto picker on the dashboard; lists every auto in src/main/deploy/pathplanner/autos */
     private final SendableChooser<Command> autoChooser;
+
+    /* Drive-to-spot target: the Square Test start, (2, 3) m facing 0° (blue side; mirrored on red) */
+    private final Pose2d squareStartPose = new Pose2d(2.0, 3.0, Rotation2d.kZero);
+
+    /*
+     * Speed limits for drive-to-spot, kept slow for first tests:
+     * 1.5 m/s and 3 m/s² (same top speed as the Square Test), 1 turn/s and 2 turns/s².
+     */
+    private final PathConstraints driveToSpotConstraints = new PathConstraints(
+        1.5, 3.0, RotationsPerSecond.of(1.0).in(RadiansPerSecond), RotationsPerSecond.of(2.0).in(RadiansPerSecond));
 
     public RobotContainer() {
         // Named commands let PathPlanner autos call our code. They must be registered
@@ -97,6 +109,12 @@ public class RobotContainer {
 
         // Reset the field-centric heading on left bumper press.
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+        // Hold right bumper: PathPlanner plans a path from where we are to the Square Test start
+        // and drives it. Let go to stop and take back control.
+        joystick.rightBumper().whileTrue(
+            AutoBuilder.pathfindToPoseFlipped(squareStartPose, driveToSpotConstraints)
+        );
 
         // An auto may have turned vision off; always drive teleop with vision on
         RobotModeTriggers.teleop().onTrue(vision.setEnabledCommand(true));
