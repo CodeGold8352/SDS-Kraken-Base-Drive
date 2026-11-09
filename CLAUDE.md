@@ -12,6 +12,7 @@ Repo: https://github.com/CodeGold8352/SDS-Kraken-Base-Drive (public fork of carr
 - `generated/TunerConstants.java` — Tuner X output. Don't hand-edit module offsets/IDs; regenerate from Tuner X instead.
 - `subsystems/CommandSwerveDrivetrain.java` — drivetrain + `configureAutoBuilder()` (PathPlanner, ApplyRobotSpeeds with wheel force feedforwards; path PID translation 10, rotation 7; flips paths on red)
 - `RobotContainer.java` — Xbox driver bindings, "Auto Mode" SendableChooser built by `AutoBuilder.buildAutoChooser("Square Test")`. Hold right bumper = `pathfindToPoseFlipped` to the Square Test start (2,3) at 1.5 m/s; release to cancel. Pathfinding uses `navgrid.json` (still the competition field grid).
+- `subsystems/Vision.java` — Limelight MegaTag2 corrections. Camera mount pose lives in code (`kCamera*`, test mount: fwd 0.330, side 0, up 0.127 m, angles 0) and is sent at startup with `setCameraPose_RobotSpace`, overwriting the Limelight web UI. Keep the UI matching.
 - `src/main/deploy/pathplanner/` — PathPlanner GUI files. `settings.json` = robot config (30 lb, 26x25 in bumpers, MOI estimated 0.95 kg·m²). Edit paths/autos in the PathPlanner app, not by hand.
 
 ## Autos

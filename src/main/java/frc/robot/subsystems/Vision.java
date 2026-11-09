@@ -27,11 +27,17 @@ public class Vision extends SubsystemBase {
     /*
      * Where the camera sits on the robot, measured from the center of the robot at floor level.
      * Forward/side/up in meters (side is + to the LEFT), roll/pitch/yaw in degrees (pitch is + tilted UP).
-     * TODO: MEASURE THESE on the real robot. Wrong values here make every vision pose wrong.
+     * These are sent to the Limelight at startup and OVERWRITE what's in its web UI, so keep the two matching.
+     *
+     * TEST mount (temporary): front-center of the 26 in frame, facing forward, lens 5 in off the floor.
+     *   forward = 13 in (half the frame) = 0.330 m, up = 5 in = 0.127 m.
+     * Pitch is 0 if the camera is level; check the tilt and its sign in the Limelight 3D visualizer.
+     * Re-measure when the camera moves (the competition mount will be higher, tilted up 15-30°),
+     * then redo the 1-2-3 m check: pose within 5 cm and 2° at 1, 2 and 3 m from a tag.
      */
-    private static final double kCameraForward = 0.0;
+    private static final double kCameraForward = 0.330;
     private static final double kCameraSide = 0.0;
-    private static final double kCameraUp = 0.0;
+    private static final double kCameraUp = 0.127;
     private static final double kCameraRoll = 0.0;
     private static final double kCameraPitch = 0.0;
     private static final double kCameraYaw = 0.0;
