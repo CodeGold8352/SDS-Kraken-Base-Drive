@@ -1,0 +1,11 @@
+# Code owners for the robot code.
+#
+# Every pull request needs an approval from someone on the mentors team
+# before it can merge into a protected branch (when "Require review from
+# Code Owners" is turned on in the branch protection rules).
+# Students can still review and comment, but their approvals don't count.
+#
+# To change who can approve, add or remove people from the team in the
+# CodeGold8352 org settings. You don't need to edit this file.
+
+* @CodeGold8352/mentors
